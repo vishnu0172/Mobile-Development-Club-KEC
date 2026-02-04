@@ -68,21 +68,21 @@ export default function MADCWebsite() {
 
   const scrollToSection = (sectionId) => {
     setIsMenuOpen(false);
-    // Small delay to allow menu to close before scrolling on mobile
+    // Increased delay for mobile to allow menu animation to complete
     setTimeout(() => {
       const element = document.getElementById(sectionId);
       if (element) {
         const navHeight = 80; // Account for fixed navbar height
         const elementPosition = element.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - navHeight;
+        const offsetPosition = elementPosition + window.scrollY - navHeight;
         
         window.scrollTo({
-          top: offsetPosition,
+          top: Math.max(0, offsetPosition),
           behavior: 'smooth'
         });
         setActiveSection(sectionId);
       }
-    }, 100);
+    }, 300);
   };
 
   const scrollToTop = () => {
@@ -305,7 +305,7 @@ export default function MADCWebsite() {
       { name: "Mr.P.Yaswanth", department: "IV - IT" },
       { name: "Ms.C.Subaharini", department: "III - CSE" }
     ],
-    treasurer: { name: "Mr.R.Narasekumar", department: "IV - IT" },
+    treasurer: { name: "Mr.R.Naveen Kumar", department: "IV - IT" },
     jointTreasurer: [{ name: "Ms.E.Swathi", department: "III - AIDS" },{ name: "Mr.G.Soorya", department: "III - CSD" }],
     additionalTreasurers: [
       { name: "Mr.S. Mohaideen Abdul Kathar", department: "III - EIE" },
@@ -315,7 +315,7 @@ export default function MADCWebsite() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 text-white font-poppins overflow-x-hidden w-full max-w-full">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 text-white font-poppins overflow-x-hidden w-full max-w-[100vw] box-border">
       {/* Navigation */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled ? 'bg-slate-950/95 backdrop-blur-lg shadow-lg shadow-purple-500/10' : 'bg-transparent'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -361,8 +361,14 @@ export default function MADCWebsite() {
 
             {/* Mobile Menu Button */}
             <button
-              className="md:hidden p-2 rounded-lg hover:bg-white/10 transition-all duration-300 hover:scale-110 hover:rotate-180"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden p-2 rounded-lg hover:bg-white/10 transition-all duration-300 touch-manipulation z-50 relative"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setIsMenuOpen(!isMenuOpen);
+              }}
+              type="button"
+              aria-label="Toggle menu"
             >
               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -370,19 +376,24 @@ export default function MADCWebsite() {
         </div>
 
         {/* Mobile Menu */}
-        <div className={`md:hidden bg-slate-950/98 backdrop-blur-xl border-t border-purple-500/20 transition-all duration-300 ${isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+        <div className={`md:hidden bg-slate-950/98 backdrop-blur-xl border-t border-purple-500/20 transition-all duration-300 ${isMenuOpen ? 'max-h-[500px] opacity-100 visible' : 'max-h-0 opacity-0 invisible overflow-hidden'}`}>
           <div className="px-4 py-4 space-y-2">
             {['home', 'about', 'opportunities', 'activities', 'events', 'team'].map((item, index) => (
               <button
                 key={item}
-                onClick={() => scrollToSection(item)}
-                className="block w-full text-left px-4 py-3 rounded-lg text-sm font-medium uppercase tracking-wider text-gray-300 hover:text-white hover:bg-purple-500/20 transition-all"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  scrollToSection(item);
+                }}
+                className="block w-full text-left px-4 py-3 rounded-lg text-sm font-medium uppercase tracking-wider text-gray-300 hover:text-white hover:bg-purple-500/20 transition-all active:bg-purple-500/30 touch-manipulation cursor-pointer z-50"
                 style={{ animationDelay: `${index * 50}ms` }}
+                type="button"
               >
                 {item}
               </button>
             ))}
-            <a href="mailto:madc@mahaguruji.org?subject=Join MADC&body=Hi, I would like to join MADC." className="block w-full px-4 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg font-semibold text-sm uppercase tracking-wider text-center">
+            <a href="mailto:madc@2022official.com?subject=Join MADC&body=Hi, I would like to join MADC." className="block w-full px-4 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg font-semibold text-sm uppercase tracking-wider text-center touch-manipulation">
               Join Now
             </a>
           </div>
@@ -956,19 +967,21 @@ export default function MADCWebsite() {
 
             {/* Joint Treasurer */}
             <div className="mb-10">
-              <h4 className="text-lg font-semibold mb-4 text-center text-purple-300">Joint Treasurer</h4>
-              <div className="max-w-md mx-auto">
-                <div className="group bg-gradient-to-br from-slate-900/50 to-purple-950/30 backdrop-blur-sm border border-purple-500/20 rounded-xl p-5 hover:border-purple-500/40 transition-all duration-300">
-                  <div className="flex items-center justify-center gap-4">
-                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center flex-shrink-0">
-                      <User className="w-6 h-6 text-purple-400" />
-                    </div>
-                    <div>
-                      <h5 className="font-semibold">{studentOfficeBearers.jointTreasurer.name}</h5>
-                      <p className="text-sm text-purple-300">{studentOfficeBearers.jointTreasurer.department}</p>
+              <h4 className="text-lg font-semibold mb-4 text-center text-purple-300">Joint Treasurers</h4>
+              <div className="grid sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
+                {studentOfficeBearers.jointTreasurer.map((member, index) => (
+                  <div key={index} className="group bg-gradient-to-br from-slate-900/50 to-purple-950/30 backdrop-blur-sm border border-purple-500/20 rounded-xl p-5 hover:border-purple-500/40 transition-all duration-300">
+                    <div className="flex items-center justify-center gap-4">
+                      <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center flex-shrink-0">
+                        <User className="w-6 h-6 text-purple-400" />
+                      </div>
+                      <div>
+                        <h5 className="font-semibold">{member.name}</h5>
+                        <p className="text-sm text-purple-300">{member.department}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
+                ))}
               </div>
             </div>
 

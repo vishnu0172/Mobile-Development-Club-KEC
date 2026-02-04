@@ -607,6 +607,7 @@ html, body {
   overflow-x: hidden;
   width: 100%;
   max-width: 100vw;
+  position: relative;
 }
 
 /* Fix for elements that might cause overflow */
@@ -615,10 +616,42 @@ img, video, iframe {
   height: auto;
 }
 
+/* Mobile touch improvements */
+@media (max-width: 768px) {
+  /* Ensure touch targets are properly sized */
+  button, a, [role="button"] {
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+  
+  /* Prevent double-tap zoom on interactive elements */
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
+  
+  /* Mobile menu specific fixes */
+  nav button {
+    -webkit-tap-highlight-color: rgba(168, 85, 247, 0.3);
+    cursor: pointer;
+  }
+  
+  /* Ensure proper stacking of mobile elements */
+  nav {
+    position: fixed !important;
+    width: 100%;
+  }
+}
+
 /* Ensure text doesn't overflow on mobile */
 @media (max-width: 640px) {
   h1, h2, h3, h4, h5, h6, p, span {
     word-wrap: break-word;
     overflow-wrap: break-word;
+  }
+  
+  /* Fix grid overflow */
+  .grid {
+    width: 100%;
+    max-width: 100%;
   }
 }
