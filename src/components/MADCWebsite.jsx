@@ -67,12 +67,22 @@ export default function MADCWebsite() {
   }, [chatMessages]);
 
   const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setActiveSection(sectionId);
-      setIsMenuOpen(false);
-    }
+    setIsMenuOpen(false);
+    // Small delay to allow menu to close before scrolling on mobile
+    setTimeout(() => {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        const navHeight = 80; // Account for fixed navbar height
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - navHeight;
+        
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+        setActiveSection(sectionId);
+      }
+    }, 100);
   };
 
   const scrollToTop = () => {
@@ -280,14 +290,14 @@ export default function MADCWebsite() {
 
   // Team Members from the document
   const staffCoordinators = [
-    { name: "Mr.A.P.Ponselvakumar", designation: "Assistant Professor", department: "SLG" },
-    { name: "Mrs.P.Vanitha", designation: "Assistant Professor", department: "IT" }
+    { name: "Mr.A.P.Ponselvakumar", designation: "Assistant Professor SLG", department: "IT" },
+    { name: "Ms.P.Vanitha", designation: "Assistant Professor", department: "IT" }
   ];
 
   const studentOfficeBearers = {
-    secretary: { name: "Ms.M.Madhanvarshini", department: "IV - CSE" },
+    secretary: { name: "Ms.M.Madhuvarshini", department: "IV - CSE" },
     jointSecretaries: [
-      { name: "Mr.S.Mikel", department: "IV - IT" },
+      { name: "Mr.S.Mukil", department: "IV - IT" },
       { name: "Mr.N.Harish Kannan", department: "III - CSE" }
     ],
     additionalSecretaries: [
@@ -296,17 +306,16 @@ export default function MADCWebsite() {
       { name: "Ms.C.Subaharini", department: "III - CSE" }
     ],
     treasurer: { name: "Mr.R.Narasekumar", department: "IV - IT" },
-    jointTreasurer: { name: "Ms.E.Swathi", department: "III - AIDS" },
+    jointTreasurer: [{ name: "Ms.E.Swathi", department: "III - AIDS" },{ name: "Mr.G.Soorya", department: "III - CSD" }],
     additionalTreasurers: [
-      { name: "Mr.G.Soorya", department: "III - CSD" },
       { name: "Mr.S. Mohaideen Abdul Kathar", department: "III - EIE" },
       { name: "Ms.K.Tanya", department: "III - AIDS" },
-      { name: "Mr.B. Towfeek", department: "III - AIDS" }
+      { name: "Mr.B. Tawfeek", department: "III - AIDS" }
     ]
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 text-white font-poppins overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 text-white font-poppins overflow-x-hidden w-full max-w-full">
       {/* Navigation */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled ? 'bg-slate-950/95 backdrop-blur-lg shadow-lg shadow-purple-500/10' : 'bg-transparent'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -314,17 +323,17 @@ export default function MADCWebsite() {
             <div className="flex items-center space-x-3 group cursor-pointer" onClick={() => scrollToSection('home')}>
               {/* KEC Header */}
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-purple-500/30 to-pink-500/30 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Smartphone className="w-6 h-6 text-purple-400" />
+                <div className="w-10 h-10 bg-gradient-to-br from-purple-500/30 to-pink-500/30 rounded-xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
+                  <Smartphone className="w-6 h-6 text-purple-400 group-hover:text-pink-400 transition-colors" />
                 </div>
                 <div className="hidden sm:block">
                   <div className="font-bold text-lg sm:text-xl tracking-tight flex items-center gap-2">
-                    <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">MADC</span>
+                    <span className="gradient-text-animated">MADC</span>
                   </div>
                   <div className="text-[10px] text-gray-400 uppercase tracking-wider">Kongu Engineering College</div>
                 </div>
                 <div className="sm:hidden font-bold text-lg">
-                  <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">MADC</span>
+                  <span className="gradient-text-animated">MADC</span>
                 </div>
               </div>
             </div>
@@ -335,7 +344,7 @@ export default function MADCWebsite() {
                 <button
                   key={item}
                   onClick={() => scrollToSection(item)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium uppercase tracking-wider transition-all duration-300 ${
+                  className={`animated-underline px-4 py-2 rounded-lg text-sm font-medium uppercase tracking-wider transition-all duration-300 hover:scale-105 ${
                     activeSection === item
                       ? 'bg-purple-500/20 text-purple-300'
                       : 'text-gray-300 hover:text-white hover:bg-white/5'
@@ -344,14 +353,15 @@ export default function MADCWebsite() {
                   {item}
                 </button>
               ))}
-              <button className="ml-4 px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg font-semibold text-sm uppercase tracking-wider hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-300 hover:scale-105 hover:-translate-y-0.5">
-                Join Now
-              </button>
+              <a href="mailto:madc@kec.com?subject=Join MADC&body=Hi, I would like to join MADC." className="magnetic-btn ml-4 px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg font-semibold text-sm uppercase tracking-wider hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-300 relative overflow-hidden">
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"></span>
+                <span className="relative">Join Now</span>
+              </a>
             </div>
 
             {/* Mobile Menu Button */}
             <button
-              className="md:hidden p-2 rounded-lg hover:bg-white/10 transition-colors"
+              className="md:hidden p-2 rounded-lg hover:bg-white/10 transition-all duration-300 hover:scale-110 hover:rotate-180"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -372,9 +382,9 @@ export default function MADCWebsite() {
                 {item}
               </button>
             ))}
-            <button className="w-full px-4 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg font-semibold text-sm uppercase tracking-wider">
+            <a href="mailto:madc@mahaguruji.org?subject=Join MADC&body=Hi, I would like to join MADC." className="block w-full px-4 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg font-semibold text-sm uppercase tracking-wider text-center">
               Join Now
-            </button>
+            </a>
           </div>
         </div>
       </nav>
@@ -390,10 +400,27 @@ export default function MADCWebsite() {
           }}></div>
         </div>
 
-        {/* Floating Shapes */}
-        <div className="absolute top-20 left-5 sm:left-10 w-48 sm:w-72 h-48 sm:h-72 bg-purple-500/30 rounded-full blur-3xl animate-float"></div>
-        <div className="absolute bottom-20 right-5 sm:right-10 w-64 sm:w-96 h-64 sm:h-96 bg-pink-500/30 rounded-full blur-3xl animate-float-delayed"></div>
-        <div className="absolute top-1/2 left-1/4 w-32 sm:w-48 h-32 sm:h-48 bg-blue-500/20 rounded-full blur-3xl animate-pulse-slow hidden sm:block"></div>
+        {/* Floating Shapes with Morph Animation */}
+        <div className="absolute top-20 left-5 sm:left-10 w-48 sm:w-72 h-48 sm:h-72 bg-purple-500/30 blur-3xl animate-float animate-morph"></div>
+        <div className="absolute bottom-20 right-5 sm:right-10 w-64 sm:w-96 h-64 sm:h-96 bg-pink-500/30 blur-3xl animate-float-delayed animate-morph" style={{animationDelay: '2s'}}></div>
+        <div className="absolute top-1/2 left-1/4 w-32 sm:w-48 h-32 sm:h-48 bg-blue-500/20 blur-3xl animate-pulse-slow animate-morph hidden sm:block" style={{animationDelay: '4s'}}></div>
+        <div className="absolute top-1/3 right-1/4 w-40 sm:w-56 h-40 sm:h-56 bg-cyan-500/20 blur-3xl animate-float animate-morph hidden md:block" style={{animationDelay: '3s'}}></div>
+        
+        {/* Animated Particles */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-1 h-1 bg-purple-400 rounded-full animate-star-twinkle"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 3}s`,
+                opacity: Math.random() * 0.5 + 0.2
+              }}
+            />
+          ))}
+        </div>
 
         {/* Floating Icons - Hidden on small mobile */}
         <div className="absolute top-32 right-10 sm:right-20 animate-float-slow opacity-20 hidden sm:block">
@@ -443,10 +470,10 @@ export default function MADCWebsite() {
             </div>
             
             <h1 className="text-3xl xs:text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-none">
-              <span className="block bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent animate-fade-in-up animation-delay-400">
+              <span className="block bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent animate-fade-in-up animation-delay-400 animate-text-glow">
                 BUILD THE FUTURE
               </span>
-              <span className="block mt-2 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent animate-fade-in-up animation-delay-600 animate-gradient-x">
+              <span className="block mt-2 gradient-text-animated animate-fade-in-up animation-delay-600">
                 ONE APP AT A TIME
               </span>
             </h1>
@@ -456,13 +483,14 @@ export default function MADCWebsite() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-6 sm:pt-8 animate-fade-in-up animation-delay-1000 w-full px-4">
-              <button onClick={() => scrollToSection('about')} className="group w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold text-base sm:text-lg uppercase tracking-wider hover:shadow-2xl hover:shadow-purple-500/50 transition-all duration-300 hover:scale-105 hover:-translate-y-1 flex items-center justify-center gap-2">
-                Explore Club
-                <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              <button onClick={() => scrollToSection('about')} className="magnetic-btn group w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold text-base sm:text-lg uppercase tracking-wider hover:shadow-2xl hover:shadow-purple-500/50 transition-all duration-300 flex items-center justify-center gap-2 animate-glow relative overflow-hidden">
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"></span>
+                <span className="relative">Explore Club</span>
+                <ChevronRight className="w-5 h-5 group-hover:translate-x-2 transition-transform relative" />
               </button>
-              <a href={`https://${collegeInfo.website}`} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl font-semibold text-base sm:text-lg uppercase tracking-wider hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:-translate-y-1 flex items-center justify-center gap-2">
+              <a href={`https://${collegeInfo.website}`} target="_blank" rel="noopener noreferrer" className="magnetic-btn neon-border w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl font-semibold text-base sm:text-lg uppercase tracking-wider hover:bg-white/20 transition-all duration-300 flex items-center justify-center gap-2">
                 Visit College
-                <ExternalLink className="w-5 h-5" />
+                <ExternalLink className="w-5 h-5 group-hover:rotate-12 transition-transform" />
               </a>
             </div>
 
@@ -485,13 +513,16 @@ export default function MADCWebsite() {
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 pt-10 sm:pt-16 max-w-4xl mx-auto px-2">
               {[
-                { number: "500+", label: "Active Members" },
-                { number: "50+", label: "Projects Built" },
-                { number: "100+", label: "Workshops Held" },
-                { number: "20+", label: "Hackathons Won" }
+                { number: "500+", label: "Active Members", icon: <Users className="w-5 h-5" /> },
+                { number: "50+", label: "Projects Built", icon: <Code className="w-5 h-5" /> },
+                { number: "100+", label: "Workshops Held", icon: <Calendar className="w-5 h-5" /> },
+                { number: "20+", label: "Hackathons Won", icon: <Trophy className="w-5 h-5" /> }
               ].map((stat, index) => (
-                <div key={index} className="text-center animate-fade-in-up" style={{ animationDelay: `${1200 + index * 100}ms` }}>
-                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent animate-count-up">
+                <div key={index} className="text-center animate-scale-in group hover:scale-110 transition-transform duration-300 cursor-default" style={{ animationDelay: `${1200 + index * 150}ms` }}>
+                  <div className="flex justify-center mb-2 text-purple-400 group-hover:animate-heartbeat">
+                    {stat.icon}
+                  </div>
+                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold gradient-text-animated">
                     {stat.number}
                   </div>
                   <div className="text-xs sm:text-sm text-gray-400 uppercase tracking-wider font-medium mt-1">
@@ -502,14 +533,14 @@ export default function MADCWebsite() {
             </div>
 
             {/* Tech Stack Pills */}
-            <div className="flex flex-wrap justify-center gap-3 pt-8 animate-fade-in-up animation-delay-1000">
+            <div className="flex flex-wrap justify-center gap-3 pt-8">
               {techStack.map((tech, index) => (
                 <div
                   key={index}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r ${tech.color} bg-opacity-20 border border-white/10 backdrop-blur-sm hover:scale-110 transition-transform duration-300 cursor-default`}
+                  className={`animate-flip-in flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r ${tech.color} bg-opacity-20 border border-white/10 backdrop-blur-sm hover:scale-110 hover:shadow-lg hover:shadow-purple-500/30 transition-all duration-300 cursor-default hover-lift`}
                   style={{ animationDelay: `${1400 + index * 100}ms` }}
                 >
-                  {tech.icon}
+                  <span className="animate-wave" style={{ animationDelay: `${index * 200}ms` }}>{tech.icon}</span>
                   <span className="text-sm font-medium">{tech.name}</span>
                 </div>
               ))}
@@ -518,10 +549,11 @@ export default function MADCWebsite() {
         </div>
 
         {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 rounded-full border-2 border-purple-400/50 flex justify-center pt-2">
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce cursor-pointer" onClick={() => scrollToSection('about')}>
+          <div className="w-6 h-10 rounded-full border-2 border-purple-400/50 flex justify-center pt-2 animate-glow hover:border-purple-400 transition-colors">
             <div className="w-1.5 h-3 bg-purple-400 rounded-full animate-scroll-indicator"></div>
           </div>
+          <p className="text-xs text-purple-400/60 mt-2 text-center animate-pulse">Scroll</p>
         </div>
       </section>
 
@@ -607,16 +639,16 @@ export default function MADCWebsite() {
             {opportunities.map((opportunity, index) => (
               <div
                 key={index}
-                className="group bg-gradient-to-br from-slate-900/50 to-purple-950/30 backdrop-blur-sm border border-purple-500/20 rounded-xl sm:rounded-2xl p-4 sm:p-6 hover:border-purple-500/50 transition-all duration-500 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/20 hover:-translate-y-2"
-                style={{ animationDelay: `${index * 100}ms` }}
+                className="animate-fade-in-up card-3d group bg-gradient-to-br from-slate-900/50 to-purple-950/30 backdrop-blur-sm border border-purple-500/20 rounded-xl sm:rounded-2xl p-4 sm:p-6 hover:border-purple-500/50 transition-all duration-500 hover:shadow-xl hover:shadow-purple-500/30 animate-border-glow"
+                style={{ animationDelay: `${index * 150}ms` }}
               >
-                <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-lg sm:rounded-xl flex items-center justify-center mb-3 sm:mb-5 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                  <div className="text-purple-400 group-hover:text-pink-400 transition-colors duration-300 [&>svg]:w-5 [&>svg]:h-5 sm:[&>svg]:w-6 sm:[&>svg]:h-6 md:[&>svg]:w-8 md:[&>svg]:h-8">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-lg sm:rounded-xl flex items-center justify-center mb-3 sm:mb-5 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 group-hover:animate-glow">
+                  <div className="text-purple-400 group-hover:text-pink-400 transition-colors duration-300 [&>svg]:w-5 [&>svg]:h-5 sm:[&>svg]:w-6 sm:[&>svg]:h-6 md:[&>svg]:w-8 md:[&>svg]:h-8 group-hover:animate-wave">
                     {opportunity.icon}
                   </div>
                 </div>
-                <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3">{opportunity.title}</h3>
-                <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">{opportunity.description}</p>
+                <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3 group-hover:text-purple-300 transition-colors">{opportunity.title}</h3>
+                <p className="text-gray-400 text-xs sm:text-sm leading-relaxed group-hover:text-gray-300 transition-colors">{opportunity.description}</p>
               </div>
             ))}
           </div>
@@ -624,17 +656,36 @@ export default function MADCWebsite() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-12 sm:py-20 relative">
+      <section className="py-12 sm:py-20 relative overflow-hidden">
+        {/* Animated background orbs */}
+        <div className="absolute top-0 left-1/4 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl animate-float"></div>
+        <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-pink-500/20 rounded-full blur-3xl animate-float-delayed"></div>
+        
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-purple-500/30 rounded-2xl sm:rounded-3xl p-6 sm:p-10 md:p-12 lg:p-16 relative overflow-hidden group hover:border-purple-500/50 transition-all duration-500">
+          <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-purple-500/30 rounded-2xl sm:rounded-3xl p-6 sm:p-10 md:p-12 lg:p-16 relative overflow-hidden group hover:border-purple-500/50 transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/20">
             <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-pink-500/10 group-hover:opacity-75 transition-opacity"></div>
-            <div className="absolute -top-20 -right-20 w-40 h-40 bg-purple-500/30 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
-            <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-pink-500/30 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
+            <div className="absolute -top-20 -right-20 w-40 h-40 bg-purple-500/30 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700 animate-morph"></div>
+            <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-pink-500/30 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700 animate-morph" style={{animationDelay: '2s'}}></div>
+            
+            {/* Animated particles inside CTA */}
+            <div className="absolute inset-0 pointer-events-none">
+              {[...Array(8)].map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute w-2 h-2 bg-purple-400/40 rounded-full animate-star-twinkle"
+                  style={{
+                    left: `${10 + Math.random() * 80}%`,
+                    top: `${10 + Math.random() * 80}%`,
+                    animationDelay: `${Math.random() * 2}s`
+                  }}
+                />
+              ))}
+            </div>
             
             <div className="relative z-10">
-              <Sparkles className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-purple-400 mx-auto mb-4 sm:mb-6 animate-pulse" />
+              <Sparkles className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-purple-400 mx-auto mb-4 sm:mb-6 animate-heartbeat" />
               <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tight mb-4 sm:mb-6">
-                <span className="bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
+                <span className="gradient-text-animated">
                   Ready to Start Your Journey?
                 </span>
               </h2>
@@ -642,11 +693,12 @@ export default function MADCWebsite() {
                 Whether you're a beginner or an experienced developer, MADC offers something for everyone. Join us and be part of the mobile revolution!
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-                <a href={`mailto:${collegeInfo.email}`} className="group w-full sm:w-auto px-5 sm:px-6 md:px-8 py-3 sm:py-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold text-sm sm:text-base md:text-lg uppercase tracking-wider hover:shadow-2xl hover:shadow-purple-500/50 transition-all duration-300 hover:scale-105 hover:-translate-y-1 flex items-center justify-center gap-2">
-                  Contact Us
-                  <Mail className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
+                <a href={`mailto:${collegeInfo.email}`} className="magnetic-btn group w-full sm:w-auto px-5 sm:px-6 md:px-8 py-3 sm:py-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl font-semibold text-sm sm:text-base md:text-lg uppercase tracking-wider hover:shadow-2xl hover:shadow-purple-500/50 transition-all duration-300 flex items-center justify-center gap-2 relative overflow-hidden">
+                  <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"></span>
+                  <span className="relative">Contact Us</span>
+                  <Mail className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 group-hover:rotate-12 transition-transform relative" />
                 </a>
-                <button onClick={() => scrollToSection('team')} className="w-full sm:w-auto px-5 sm:px-6 md:px-8 py-3 sm:py-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl font-semibold text-sm sm:text-base md:text-lg uppercase tracking-wider hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:-translate-y-1">
+                <button onClick={() => scrollToSection('team')} className="magnetic-btn neon-border w-full sm:w-auto px-5 sm:px-6 md:px-8 py-3 sm:py-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl font-semibold text-sm sm:text-base md:text-lg uppercase tracking-wider hover:bg-white/20 transition-all duration-300">
                   Meet the Team
                 </button>
               </div>
@@ -678,19 +730,19 @@ export default function MADCWebsite() {
             {activities.map((activity, index) => (
               <div
                 key={index}
-                className="group bg-gradient-to-br from-slate-900/50 to-purple-950/30 backdrop-blur-sm border border-purple-500/20 rounded-xl sm:rounded-2xl p-4 sm:p-6 hover:border-purple-500/50 transition-all duration-500 hover:scale-105 hover:-translate-y-2"
+                className="animate-fade-in-up hover-lift group bg-gradient-to-br from-slate-900/50 to-purple-950/30 backdrop-blur-sm border border-purple-500/20 rounded-xl sm:rounded-2xl p-4 sm:p-6 hover:border-purple-500/50 transition-all duration-500 hover:shadow-xl hover:shadow-purple-500/20"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 <div className="flex items-start justify-between mb-3 sm:mb-4">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-lg sm:rounded-xl flex items-center justify-center text-purple-400 group-hover:scale-110 group-hover:rotate-6 transition-all [&>svg]:w-5 [&>svg]:h-5 sm:[&>svg]:w-6 sm:[&>svg]:h-6">
-                    {activity.icon}
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-lg sm:rounded-xl flex items-center justify-center text-purple-400 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 group-hover:bg-gradient-to-br group-hover:from-purple-500/40 group-hover:to-pink-500/40 [&>svg]:w-5 [&>svg]:h-5 sm:[&>svg]:w-6 sm:[&>svg]:h-6">
+                    <span className="group-hover:animate-wave">{activity.icon}</span>
                   </div>
-                  <span className="px-2 sm:px-3 py-0.5 sm:py-1 bg-purple-500/20 rounded-full text-[10px] sm:text-xs font-medium text-purple-300 uppercase group-hover:bg-purple-500/30 transition-colors">
+                  <span className="px-2 sm:px-3 py-0.5 sm:py-1 bg-purple-500/20 rounded-full text-[10px] sm:text-xs font-medium text-purple-300 uppercase group-hover:bg-purple-500/40 group-hover:scale-105 transition-all">
                     {activity.frequency}
                   </span>
                 </div>
-                <h3 className="text-base sm:text-lg font-semibold mb-1.5 sm:mb-2">{activity.title}</h3>
-                <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">{activity.description}</p>
+                <h3 className="text-base sm:text-lg font-semibold mb-1.5 sm:mb-2 group-hover:text-purple-300 transition-colors">{activity.title}</h3>
+                <p className="text-gray-400 text-xs sm:text-sm leading-relaxed group-hover:text-gray-300 transition-colors">{activity.description}</p>
               </div>
             ))}
           </div>
@@ -701,12 +753,12 @@ export default function MADCWebsite() {
       <section id="events" className={`py-12 sm:py-20 relative transition-all duration-1000 ${visibleSections.events ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8 sm:mb-12">
-            <div className="inline-block px-3 sm:px-4 py-1.5 sm:py-2 bg-purple-500/20 border border-purple-500/30 rounded-full backdrop-blur-sm mb-4 sm:mb-6">
+            <div className="inline-block px-3 sm:px-4 py-1.5 sm:py-2 bg-purple-500/20 border border-purple-500/30 rounded-full backdrop-blur-sm mb-4 sm:mb-6 animate-border-glow">
               <span className="text-purple-300 font-medium text-xs sm:text-sm uppercase tracking-wider">What's Coming Up</span>
             </div>
             <div className="flex items-center justify-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-              <CalendarDays className="w-6 h-6 sm:w-8 sm:h-8 text-purple-400 animate-pulse" />
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">Upcoming Events</h2>
+              <CalendarDays className="w-6 h-6 sm:w-8 sm:h-8 text-purple-400 animate-heartbeat" />
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold gradient-text-animated">Upcoming Events</h2>
             </div>
           </div>
 
@@ -718,12 +770,12 @@ export default function MADCWebsite() {
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 <div className="text-purple-400 font-semibold mb-2 flex items-center gap-2">
-                  <Calendar className="w-4 h-4" />
+                  <Calendar className="w-4 h-4 group-hover:animate-wave" />
                   {event.date}
                 </div>
-                <h3 className="text-lg font-semibold mb-2">{event.title}</h3>
-                <p className="text-gray-400 text-sm mb-4">{event.description}</p>
-                <span className="inline-block px-3 py-1 bg-purple-500/20 rounded-full text-xs font-medium text-purple-300 group-hover:bg-purple-500/30 transition-colors">
+                <h3 className="text-lg font-semibold mb-2 group-hover:text-purple-300 transition-colors">{event.title}</h3>
+                <p className="text-gray-400 text-sm mb-4 group-hover:text-gray-300 transition-colors">{event.description}</p>
+                <span className="inline-block px-3 py-1 bg-purple-500/20 rounded-full text-xs font-medium text-purple-300 group-hover:bg-purple-500/40 group-hover:scale-105 transition-all">
                   {event.tag}
                 </span>
               </div>
@@ -731,10 +783,10 @@ export default function MADCWebsite() {
           </div>
 
           {/* Annual Flagship Events */}
-          <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-purple-500/30 rounded-3xl p-8 sm:p-12 hover:border-purple-500/50 transition-all duration-500">
+          <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-purple-500/30 rounded-3xl p-8 sm:p-12 hover:border-purple-500/50 transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/20 animate-border-glow">
             <div className="text-center mb-8">
-              <Trophy className="w-12 h-12 mx-auto mb-4 text-yellow-400 animate-bounce-slow" />
-              <h3 className="text-2xl sm:text-3xl font-bold mb-2">Annual Flagship Events</h3>
+              <Trophy className="w-12 h-12 mx-auto mb-4 text-yellow-400 animate-heartbeat" />
+              <h3 className="text-2xl sm:text-3xl font-bold mb-2 gradient-text-animated">Annual Flagship Events</h3>
               <p className="text-gray-300">
                 Don't miss our signature events that bring together mobile developers from across the region
               </p>
@@ -744,15 +796,15 @@ export default function MADCWebsite() {
               {flagshipEvents.map((event, index) => (
                 <div
                   key={index}
-                  className="group bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-purple-500/30 hover:bg-white/10 transition-all duration-300"
+                  className="hover-lift group bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-purple-500/30 hover:bg-white/10 transition-all duration-300"
                 >
                   <div className="flex items-start gap-3 mb-3">
-                    <span className="text-3xl animate-bounce-slow" style={{ animationDelay: `${index * 200}ms` }}>{event.emoji}</span>
-                    <h4 className="text-xl font-semibold">{event.title}</h4>
+                    <span className="text-3xl animate-wave" style={{ animationDelay: `${index * 200}ms` }}>{event.emoji}</span>
+                    <h4 className="text-xl font-semibold group-hover:text-purple-300 transition-colors">{event.title}</h4>
                   </div>
-                  <p className="text-gray-300 mb-3">{event.description}</p>
+                  <p className="text-gray-300 mb-3 group-hover:text-white transition-colors">{event.description}</p>
                   <p className="text-sm text-purple-300 flex items-center gap-2">
-                    <Calendar className="w-4 h-4" />
+                    <Calendar className="w-4 h-4 group-hover:animate-heartbeat" />
                     {event.details}
                   </p>
                 </div>
@@ -764,13 +816,19 @@ export default function MADCWebsite() {
 
       {/* Team Section */}
       <section id="team" className={`py-12 sm:py-20 md:py-32 relative transition-all duration-1000 ${visibleSections.team ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Background decoration */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl animate-float"></div>
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-float-delayed"></div>
+        </div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10 sm:mb-16">
-            <div className="inline-block px-3 sm:px-4 py-1.5 sm:py-2 bg-purple-500/20 border border-purple-500/30 rounded-full backdrop-blur-sm mb-4 sm:mb-6">
+            <div className="inline-block px-3 sm:px-4 py-1.5 sm:py-2 bg-purple-500/20 border border-purple-500/30 rounded-full backdrop-blur-sm mb-4 sm:mb-6 animate-border-glow">
               <span className="text-purple-300 font-medium text-xs sm:text-sm uppercase tracking-wider">Our Team</span>
             </div>
             <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4 sm:mb-6 px-2">
-              <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <span className="gradient-text-animated">
                 Meet Our Leaders
               </span>
             </h2>
@@ -782,20 +840,21 @@ export default function MADCWebsite() {
           {/* Staff Coordinators */}
           <div className="mb-20">
             <h3 className="text-2xl font-bold mb-8 text-center flex items-center justify-center gap-3">
-              <BookOpen className="w-6 h-6 text-purple-400" />
-              Staff Coordinators
+              <BookOpen className="w-6 h-6 text-purple-400 animate-wave" />
+              <span className="gradient-text-animated">Staff Coordinators</span>
             </h3>
             <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
               {staffCoordinators.map((staff, index) => (
                 <div
                   key={index}
-                  className="group bg-gradient-to-br from-slate-900/50 to-purple-950/30 backdrop-blur-sm border border-purple-500/20 rounded-2xl p-8 hover:border-purple-500/40 transition-all duration-500 hover:shadow-xl hover:shadow-purple-500/10 hover:-translate-y-2"
+                  className="animate-fade-in-up hover-lift group bg-gradient-to-br from-slate-900/50 to-purple-950/30 backdrop-blur-sm border border-purple-500/20 rounded-2xl p-8 hover:border-purple-500/40 transition-all duration-500 hover:shadow-xl hover:shadow-purple-500/20"
+                  style={{ animationDelay: `${index * 150}ms` }}
                 >
                   <div className="text-center">
-                    <div className="w-16 h-16 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                      <GraduationCap className="w-8 h-8 text-purple-400" />
+                    <div className="w-16 h-16 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 group-hover:animate-glow">
+                      <GraduationCap className="w-8 h-8 text-purple-400 group-hover:text-pink-400 transition-colors" />
                     </div>
-                    <h4 className="text-lg font-semibold mb-1">{staff.name}</h4>
+                    <h4 className="text-lg font-semibold mb-1 group-hover:text-purple-300 transition-colors">{staff.name}</h4>
                     <p className="text-purple-300 font-medium text-sm mb-1">{staff.designation}</p>
                     <p className="text-gray-400 text-sm">{staff.department}</p>
                   </div>
@@ -813,16 +872,16 @@ export default function MADCWebsite() {
 
             {/* Secretary */}
             <div className="max-w-xl mx-auto mb-12">
-              <div className="group bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-sm border border-purple-500/30 rounded-3xl p-8 sm:p-10 hover:border-purple-500/50 transition-all duration-500 hover:shadow-xl hover:shadow-purple-500/10">
+              <div className="animate-scale-in group bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-sm border border-purple-500/30 rounded-3xl p-8 sm:p-10 hover:border-purple-500/50 transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/20 animate-border-glow">
                 <div className="flex flex-col items-center gap-4">
-                  <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-purple-500/30 to-pink-500/30 flex items-center justify-center flex-shrink-0 ring-4 ring-purple-500/50 group-hover:ring-purple-400 group-hover:scale-105 transition-all duration-300">
-                    <User className="w-12 h-12 text-purple-300" />
+                  <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-purple-500/30 to-pink-500/30 flex items-center justify-center flex-shrink-0 ring-4 ring-purple-500/50 group-hover:ring-purple-400 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 group-hover:animate-glow">
+                    <User className="w-12 h-12 text-purple-300 group-hover:animate-wave" />
                   </div>
                   <div className="text-center">
-                    <div className="inline-block px-4 py-1.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full text-sm font-medium uppercase tracking-wider mb-3">
-                      Secretary
+                    <div className="inline-block px-4 py-1.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full text-sm font-medium uppercase tracking-wider mb-3 animate-shimmer relative overflow-hidden">
+                      <span className="relative z-10">Secretary</span>
                     </div>
-                    <h3 className="text-2xl font-bold mb-1">{studentOfficeBearers.secretary.name}</h3>
+                    <h3 className="text-2xl font-bold mb-1 group-hover:text-purple-300 transition-colors">{studentOfficeBearers.secretary.name}</h3>
                     <p className="text-purple-300">{studentOfficeBearers.secretary.department}</p>
                   </div>
                 </div>
@@ -836,14 +895,15 @@ export default function MADCWebsite() {
                 {studentOfficeBearers.jointSecretaries.map((member, index) => (
                   <div
                     key={index}
-                    className="group bg-gradient-to-br from-slate-900/50 to-purple-950/30 backdrop-blur-sm border border-purple-500/20 rounded-xl p-5 hover:border-purple-500/40 transition-all duration-300 hover:-translate-y-1"
+                    className="animate-slide-in-left hover-lift group bg-gradient-to-br from-slate-900/50 to-purple-950/30 backdrop-blur-sm border border-purple-500/20 rounded-xl p-5 hover:border-purple-500/40 transition-all duration-300"
+                    style={{ animationDelay: `${index * 100}ms` }}
                   >
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center flex-shrink-0">
+                      <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center flex-shrink-0 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                         <User className="w-6 h-6 text-purple-400" />
                       </div>
                       <div>
-                        <h5 className="font-semibold">{member.name}</h5>
+                        <h5 className="font-semibold group-hover:text-purple-300 transition-colors">{member.name}</h5>
                         <p className="text-sm text-purple-300">{member.department}</p>
                       </div>
                     </div>
@@ -859,14 +919,15 @@ export default function MADCWebsite() {
                 {studentOfficeBearers.additionalSecretaries.map((member, index) => (
                   <div
                     key={index}
-                    className="group bg-gradient-to-br from-slate-900/50 to-purple-950/30 backdrop-blur-sm border border-purple-500/20 rounded-xl p-5 hover:border-purple-500/40 transition-all duration-300 hover:-translate-y-1"
+                    className="animate-slide-in-right hover-lift group bg-gradient-to-br from-slate-900/50 to-purple-950/30 backdrop-blur-sm border border-purple-500/20 rounded-xl p-5 hover:border-purple-500/40 transition-all duration-300"
+                    style={{ animationDelay: `${index * 100}ms` }}
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center flex-shrink-0">
+                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center flex-shrink-0 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                         <User className="w-5 h-5 text-purple-400" />
                       </div>
                       <div>
-                        <h5 className="font-medium text-sm">{member.name}</h5>
+                        <h5 className="font-medium text-sm group-hover:text-purple-300 transition-colors">{member.name}</h5>
                         <p className="text-xs text-purple-300">{member.department}</p>
                       </div>
                     </div>
@@ -877,16 +938,16 @@ export default function MADCWebsite() {
 
             {/* Treasurer */}
             <div className="max-w-xl mx-auto mb-10">
-              <div className="group bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-sm border border-purple-500/30 rounded-2xl p-6 hover:border-purple-500/50 transition-all duration-500 hover:shadow-xl hover:shadow-purple-500/10">
+              <div className="animate-scale-in hover-lift group bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-sm border border-purple-500/30 rounded-2xl p-6 hover:border-purple-500/50 transition-all duration-500 hover:shadow-xl hover:shadow-purple-500/20">
                 <div className="flex flex-col items-center gap-3">
-                  <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-purple-500/30 to-pink-500/30 flex items-center justify-center ring-2 ring-purple-500/50 group-hover:scale-105 transition-all duration-300">
-                    <Award className="w-8 h-8 text-purple-400" />
+                  <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-purple-500/30 to-pink-500/30 flex items-center justify-center ring-2 ring-purple-500/50 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 group-hover:animate-glow">
+                    <Award className="w-8 h-8 text-purple-400 group-hover:text-yellow-400 transition-colors" />
                   </div>
                   <div className="text-center">
-                    <div className="inline-block px-3 py-1 bg-purple-500/20 rounded-full text-xs font-medium text-purple-300 uppercase tracking-wider mb-2">
+                    <div className="inline-block px-3 py-1 bg-purple-500/20 rounded-full text-xs font-medium text-purple-300 uppercase tracking-wider mb-2 group-hover:bg-purple-500/40 transition-colors">
                       Treasurer
                     </div>
-                    <h4 className="text-xl font-bold mb-1">{studentOfficeBearers.treasurer.name}</h4>
+                    <h4 className="text-xl font-bold mb-1 group-hover:text-purple-300 transition-colors">{studentOfficeBearers.treasurer.name}</h4>
                     <p className="text-purple-300 text-sm">{studentOfficeBearers.treasurer.department}</p>
                   </div>
                 </div>
@@ -918,14 +979,15 @@ export default function MADCWebsite() {
                 {studentOfficeBearers.additionalTreasurers.map((member, index) => (
                   <div
                     key={index}
-                    className="group bg-gradient-to-br from-slate-900/50 to-purple-950/30 backdrop-blur-sm border border-purple-500/20 rounded-xl p-4 hover:border-purple-500/40 transition-all duration-300 hover:-translate-y-1"
+                    className="animate-fade-in-up hover-lift group bg-gradient-to-br from-slate-900/50 to-purple-950/30 backdrop-blur-sm border border-purple-500/20 rounded-xl p-4 hover:border-purple-500/40 transition-all duration-300"
+                    style={{ animationDelay: `${index * 100}ms` }}
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center flex-shrink-0">
+                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
                         <User className="w-5 h-5 text-purple-400" />
                       </div>
                       <div>
-                        <h5 className="font-medium text-sm">{member.name}</h5>
+                        <h5 className="font-medium text-sm group-hover:text-purple-300 transition-colors">{member.name}</h5>
                         <p className="text-xs text-purple-300">{member.department}</p>
                       </div>
                     </div>
@@ -950,33 +1012,39 @@ export default function MADCWebsite() {
       </section>
 
       {/* Footer */}
-      <footer className="py-10 sm:py-16 border-t border-purple-500/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <footer className="py-10 sm:py-16 border-t border-purple-500/20 relative overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl"></div>
+          <div className="absolute top-0 right-0 w-96 h-96 bg-pink-500/5 rounded-full blur-3xl"></div>
+        </div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 mb-8 sm:mb-12">
-            <div>
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="w-10 h-10 bg-gradient-to-br from-purple-500/30 to-pink-500/30 rounded-xl flex items-center justify-center">
+            <div className="animate-fade-in-up">
+              <div className="flex items-center space-x-3 mb-4 group cursor-pointer" onClick={() => scrollToSection('home')}>
+                <div className="w-10 h-10 bg-gradient-to-br from-purple-500/30 to-pink-500/30 rounded-xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
                   <Smartphone className="w-6 h-6 text-purple-400" />
                 </div>
                 <div>
-                  <span className="font-bold text-lg bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent block">MADC</span>
+                  <span className="font-bold text-lg gradient-text-animated block">MADC</span>
                   <span className="text-xs text-gray-400">{collegeInfo.name}</span>
                 </div>
               </div>
               <p className="text-gray-400 mb-4 text-sm">
                 {collegeInfo.clubName} - Empowering students with mobile development skills and fostering innovation.
               </p>
-              <p className="text-purple-300 italic text-sm">"{collegeInfo.tagline}"</p>
+              <p className="text-purple-300 italic text-sm animate-text-glow">"{collegeInfo.tagline}"</p>
             </div>
             
-            <div>
+            <div className="animate-fade-in-up" style={{animationDelay: '100ms'}}>
               <h4 className="font-semibold text-lg mb-4">Quick Links</h4>
               <ul className="space-y-3">
                 {['Home', 'About', 'Opportunities', 'Activities', 'Events', 'Team'].map((link) => (
                   <li key={link}>
                     <button
                       onClick={() => scrollToSection(link.toLowerCase())}
-                      className="text-gray-400 hover:text-purple-300 transition-colors hover:translate-x-1 inline-block"
+                      className="animated-underline text-gray-400 hover:text-purple-300 transition-colors hover:translate-x-1 inline-block"
                     >
                       {link}
                     </button>
@@ -987,7 +1055,7 @@ export default function MADCWebsite() {
                     href={`https://${collegeInfo.website}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-400 hover:text-purple-300 transition-colors hover:translate-x-1 inline-flex items-center gap-1"
+                    className="animated-underline text-gray-400 hover:text-purple-300 transition-colors hover:translate-x-1 inline-flex items-center gap-1"
                   >
                     College Website
                     <ExternalLink className="w-3 h-3" />
@@ -1024,13 +1092,14 @@ export default function MADCWebsite() {
               </ul>
             </div>
 
-            <div>
+            <div className="animate-fade-in-up" style={{animationDelay: '300ms'}}>
               <h4 className="font-semibold text-lg mb-4">Join MADC</h4>
               <p className="text-gray-400 mb-4">
                 Start your mobile development journey with us today!
               </p>
-              <a href={`mailto:${collegeInfo.email}`} className="inline-block px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all hover:scale-105">
-                Contact Us
+              <a href={`mailto:${collegeInfo.email}`} className="magnetic-btn inline-block px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all relative overflow-hidden">
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"></span>
+                <span className="relative">Contact Us</span>
               </a>
               <div className="flex gap-3 mt-4">
                 {[
@@ -1038,7 +1107,7 @@ export default function MADCWebsite() {
                   { icon: <Instagram className="w-5 h-5" />, href: "#" },
                   { icon: <Github className="w-5 h-5" />, href: "#" }
                 ].map((social, index) => (
-                  <a key={index} href={social.href} className="w-10 h-10 bg-white/10 hover:bg-purple-500/30 rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110 hover:-translate-y-1">
+                  <a key={index} href={social.href} className="w-10 h-10 bg-white/10 hover:bg-purple-500/30 rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-125 hover:-translate-y-2 hover:rotate-6 hover:shadow-lg hover:shadow-purple-500/30">
                     {social.icon}
                   </a>
                 ))}
@@ -1055,22 +1124,23 @@ export default function MADCWebsite() {
       {/* Chatbot */}
       <div className="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 z-50 flex flex-col items-end gap-3 sm:gap-4">
         {/* Chat Window */}
-        <div className={`w-[calc(100vw-2rem)] sm:w-80 md:w-96 max-w-[350px] sm:max-w-none bg-slate-900/95 backdrop-blur-xl border border-purple-500/30 rounded-2xl shadow-2xl shadow-purple-500/20 transition-all duration-500 ${isChatOpen ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'}`}>
+        <div className={`w-[calc(100vw-2rem)] sm:w-80 md:w-96 max-w-[350px] sm:max-w-none bg-slate-900/95 backdrop-blur-xl border border-purple-500/30 rounded-2xl shadow-2xl shadow-purple-500/20 transition-all duration-500 ${isChatOpen ? 'opacity-100 translate-y-0 scale-100 animate-border-glow' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'}`}>
           {/* Chat Header */}
-          <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-t-2xl p-4 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                <Bot className="w-6 h-6" />
+          <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-t-2xl p-4 flex items-center justify-between relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer"></div>
+            <div className="flex items-center gap-3 relative">
+              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center animate-glow">
+                <Bot className="w-6 h-6 animate-wave" />
               </div>
               <div>
                 <h3 className="font-semibold">MADC Bot</h3>
                 <p className="text-xs text-white/80 flex items-center gap-1">
-                  <span className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span>
+                  <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
                   KEC Assistant
                 </p>
               </div>
             </div>
-            <button onClick={() => setIsChatOpen(false)} className="p-1 hover:bg-white/20 rounded-lg transition-colors">
+            <button onClick={() => setIsChatOpen(false)} className="p-1 hover:bg-white/20 rounded-lg transition-colors hover:rotate-90 duration-300 relative">
               <X className="w-5 h-5" />
             </button>
           </div>
@@ -1126,7 +1196,7 @@ export default function MADCWebsite() {
         {/* Chat Toggle Button */}
         <button
           onClick={() => setIsChatOpen(!isChatOpen)}
-          className={`w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full shadow-lg shadow-purple-500/50 flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-xl hover:shadow-purple-500/50 ${isChatOpen ? 'rotate-0' : 'animate-bounce-slow'}`}
+          className={`w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full shadow-lg shadow-purple-500/50 flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-xl hover:shadow-purple-500/50 animate-glow ${isChatOpen ? 'rotate-0' : 'animate-heartbeat'}`}
         >
           {isChatOpen ? <X className="w-5 h-5 sm:w-6 sm:h-6" /> : <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6" />}
         </button>
@@ -1135,7 +1205,7 @@ export default function MADCWebsite() {
       {/* Scroll to Top Button */}
       <button
         onClick={scrollToTop}
-        className={`fixed bottom-4 sm:bottom-6 left-4 sm:left-6 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full shadow-lg hover:shadow-purple-500/50 transition-all duration-300 flex items-center justify-center z-50 ${showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}
+        className={`fixed bottom-4 sm:bottom-6 left-4 sm:left-6 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full shadow-lg hover:shadow-purple-500/50 transition-all duration-300 flex items-center justify-center z-50 hover:scale-110 hover:-translate-y-1 ${showScrollTop ? 'opacity-100 translate-y-0 animate-bounce-slow' : 'opacity-0 translate-y-4 pointer-events-none'}`}
       >
         <ArrowUp className="w-4 h-4 sm:w-5 sm:h-5" />
       </button>
